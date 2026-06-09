@@ -1,0 +1,32 @@
+name: OutSystems Keep Alive
+
+on:
+  schedule:
+    - cron: '30 3 * * 1,4'  # 毎週月・木 12:30 JST (UTC 03:30)
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Access OutSystems
+        run: |
+          echo "Accessing OutSystems..."
+          curl -L -o /dev/null -s -w "HTTP Status: %{http_code}\n" \
+            https://personal-sfn2xtbi-dev.outsystems.app/StimulsoftEX/Login
+          echo "Access completed."
+
+      - name: Dummy commit to keep Actions alive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "Last run: $(date '+%Y-%m-%d %H:%M:%S JST' --date='9 hours')" > keep-alive.txt
+          git add keep-alive.txt
+          git commit -m "chore: keep alive $(date '+%Y-%m-%d')"
+          git push
