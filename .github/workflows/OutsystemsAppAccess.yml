@@ -17,9 +17,12 @@ jobs:
 
       - name: Access OutSystems
         run: |
-          echo "Accessing OutSystems..."
+          echo "Accessing OutSystems (1/2)..."
           curl -L -o /dev/null -s -w "HTTP Status: %{http_code}\n" \
             https://personal-sfn2xtbi-dev.outsystems.app/StimulsoftEX/Login
+          echo "Accessing OutSystems (2/2)..."
+          curl -L -o /dev/null -s -w "HTTP Status: %{http_code}\n" \
+            https://personal-pknhzeas.outsystemscloud.com/StimulsoftEX/Login
           echo "Access completed."
 
       - name: Dummy commit to keep Actions alive
